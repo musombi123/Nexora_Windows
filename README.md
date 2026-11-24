@@ -1,28 +1,52 @@
-# Nexora Windows
+# NEXORA Studio Pro — Windows
 
-Windows desktop packaging host for the existing Nexora Foundry application in [Procedural-Game-Foundry](https://github.com/musombi123/Procedural-Game-Foundry).
+Standalone Windows desktop application powered by **Tauri 2**.
 
-This repository owns the Windows Tauri 2 shell and its build artifacts. It does not fork the Foundry engine, duplicate its project database, or move creator projects to cloud storage.
+## Repository ownership
 
-## Build model
+This repository owns the NEXORA desktop host:
 
-1. GitHub Actions checks out this repository and the Foundry source repository.
-2. It installs the existing `apps/web` dependencies and builds the actual Nexora Foundry React/TypeScript workspace.
-3. Tauri packages that production web bundle into a Windows x64 NSIS installer.
-4. The workflow records the exact Foundry source commit and uploads the installer as a build artifact.
+- Tauri 2 configuration and Rust application entry point
+- Windows x64 NSIS installer packaging
+- Desktop build and artifact workflow
+- Desktop-specific versioning and release metadata
 
-## Runtime boundary
+The actual NEXORA React workspace is maintained in
+[`musombi123/RevelaCode-Frontend/apps/nexora`](https://github.com/musombi123/RevelaCode-Frontend/tree/main/apps/nexora).
+The Windows build checks that source out into `workspace/frontend` and packages it;
+it does not copy or fork the frontend implementation into this repository.
 
-The Foundry application is local-first. Its production compute engine and project data remain on the creator's Windows PC. The local agent is a separate process bound to `127.0.0.1:8765`; the hosted API is a control plane, not a project-build server.
-
-**Delivery limitation:** this first Windows package is the desktop shell around the existing Foundry web workspace. It does not yet install or launch the Python Local Agent as a managed Windows service/sidecar. Pairing handoff and full PC acceptance must be completed before describing the installer as a self-contained production workstation.
+Foundry runtime services and the Local Agent remain separate components. This
+desktop host does not replace, duplicate, or silently relocate their backend,
+project storage, or local compute responsibilities.
 
 ## Build
 
-The `Nexora Windows desktop` workflow runs on pushes to `main`, pull requests, and manual dispatch. The Windows x64 NSIS installer and source-revision manifest are retained as GitHub Actions artifacts.
+Requirements: Windows 10/11, Node.js 22, Rust stable with the MSVC target,
+and Microsoft C++ Build Tools.
 
-## Development
+Place the RevelaCode-Frontend repository at `workspace/frontend`, then run:
 
-Requirements: Node.js 22, Rust stable with the MSVC target, and Microsoft C++ Build Tools.
+```powershell
+npm ci --prefix workspace/frontend/apps/nexora
+npm ci
+npm run tauri:dev
+```
 
-The workflow checks out Foundry under `workspace/foundry`, installs `workspace/foundry/apps/web`, and builds the Tauri host from this repository.
+To produce the installer:
+
+```powershell
+npm run tauri:build
+```
+
+The Tauri build invokes the NEXORA workspace production build and packages its
+output into the desktop application.
+
+## CI
+
+The `NEXORA Windows Tauri` workflow checks out both repositories, builds the
+actual NEXORA workspace, compiles the Tauri host, and uploads the Windows x64
+NSIS installer with a manifest recording both source commits.
+
+A successful workflow artifact is a build output; it is not a signed Microsoft
+Store package. No paid signing service is required for this CI build.
