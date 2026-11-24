@@ -1,0 +1,14 @@
+{
+  "name": "nexora-windows",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Nexora Foundry Windows desktop packaging host",
+  "scripts": {
+    "tauri": "tauri",
+    "tauri:build": "tauri build",
+    "tauri:dev": "tauri dev"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.12.4"
+  }
+}
