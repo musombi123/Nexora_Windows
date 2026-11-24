@@ -53,3 +53,12 @@ Store package. The CI build does not require a paid signing service.
 ## Licence
 
 Original NEXORA desktop host source and materials are proprietary and all rights are reserved. Tauri and other third-party components remain under their own licences. See [LICENSE](LICENSE).
+
+## Repository governance
+
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Contributing](CONTRIBUTING.md)
+
+## Licence
+
+Original NEXORA Windows host source and materials are proprietary and all rights reserved; see [LICENSE](LICENSE). Tauri, Rust crates, and other third-party components retain their own licences.
