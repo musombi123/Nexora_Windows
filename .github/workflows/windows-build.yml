@@ -1,0 +1,94 @@
+name: Nexora Windows desktop
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      foundry_ref:
+        description: Branch, tag, or commit of Procedural-Game-Foundry
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nexora-windows-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-windows:
+    name: Build Nexora Windows x64 installer
+    runs-on: windows-2022
+    steps:
+      - name: Checkout Windows packaging host
+        uses: actions/checkout@v4
+
+      - name: Checkout the existing Nexora Foundry source
+        uses: actions/checkout@v4
+        with:
+          repository: musombi123/Procedural-Game-Foundry
+          ref: ${{ inputs.foundry_ref || 'main' }}
+          path: workspace/foundry
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Install Foundry web dependencies
+        shell: pwsh
+        run: npm --prefix workspace/foundry/apps/web install --no-audit --no-fund
+
+      - name: Record exact source revision
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force artifacts | Out-Null
+          $sha = (git -C workspace/foundry rev-parse HEAD).Trim()
+          $manifest = [ordered]@{
+            product = "Nexora Foundry"
+            source_repository = "musombi123/Procedural-Game-Foundry"
+            source_ref = "${{ inputs.foundry_ref || 'main' }}"
+            source_commit = $sha
+            packaging_repository = "musombi123/Nexora_Windows"
+            packaging_commit = "${{ github.sha }}"
+            build_target = "windows-x64-nsis"
+          }
+          $manifest | ConvertTo-Json -Depth 4 | Set-Content artifacts/source-revisions.json -Encoding utf8
+          Write-Host "Foundry source commit: $sha"
+
+      - name: Install Tauri packaging dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build Nexora Windows installer
+        env:
+          VITE_NEXORA_LOCAL_AGENT: "http://127.0.0.1:8765"
+        run: npm run tauri:build
+
+      - name: Verify installer output
+        shell: pwsh
+        run: |
+          $installer = Get-ChildItem "src-tauri/target/release/bundle/nsis" -Filter "*.exe" | Select-Object -First 1
+          if (-not $installer) { throw "Nexora NSIS installer was not generated." }
+          if ($installer.Length -le 1MB) { throw "Nexora installer is unexpectedly small; refusing to upload an empty or incomplete package." }
+          Copy-Item $installer.FullName "Nexora-Windows-Setup.exe" -Force
+          Get-Item "Nexora-Windows-Setup.exe" | Select-Object Name,Length
+
+      - name: Upload Windows installer and source manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexora-windows-x64
+          path: |
+            Nexora-Windows-Setup.exe
+            artifacts/source-revisions.json
+          if-no-files-found: error
+          retention-days: 30
