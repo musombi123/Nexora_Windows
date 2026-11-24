@@ -44,18 +44,16 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: |
-            package-lock.json
-            workspace/frontend/apps/nexora/package-lock.json
+          cache-dependency-path: workspace/frontend/package-lock.json
 
       - name: Set up stable Rust
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: x86_64-pc-windows-msvc
 
-      - name: Install NEXORA workspace dependencies
+      - name: Install frontend workspace dependencies
         run: npm ci
-        working-directory: workspace/frontend/apps/nexora
+        working-directory: workspace/frontend
 
       - name: Install Tauri host dependencies
         run: npm ci
