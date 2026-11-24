@@ -48,3 +48,8 @@ installer with a manifest recording both source commits.
 
 A successful workflow artifact is a build output, not a signed Microsoft
 Store package. The CI build does not require a paid signing service.
+
+
+## Licence
+
+Original NEXORA desktop host source and materials are proprietary and all rights are reserved. Tauri and other third-party components remain under their own licences. See [LICENSE](LICENSE).
