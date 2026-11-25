@@ -6,7 +6,7 @@ I'm building **NEXORA Interactive Studios**, with **Nexora Foundry** as our flag
 
 The idea is to help creators move from a structured game brief to procedural worlds and assets, Godot project assembly, validation and export—while keeping project files and production workloads on the creator's own computer.
 
-The engineering foundation brings together a React/TypeScript creator workspace, a FastAPI production core, a paired desktop Local Agent, Blender-based procedural workflows and Godot 4. A Windows desktop experience is being packaged with Tauri.
+The engineering foundation brings together a React/TypeScript creator workspace, a FastAPI production core, a paired desktop Local Agent, Blender-based procedural workflows and Godot 4. The Windows desktop host is built with Tauri 2, and its installer pipeline is still undergoing validation.
 
 We are still developing and validating the product. This is not a claim that every workflow is production-ready or that NEXORA replaces established game engines. Godot remains the first supported engine, and creator testing, device acceptance and release hardening are active priorities.
 
