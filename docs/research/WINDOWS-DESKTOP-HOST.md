@@ -87,4 +87,4 @@ At the evidence snapshot, `src-tauri/tauri.conf.json` says version 0.1.1 while t
 - [NEXORA app in the frontend repository](https://github.com/musombi123/RevelaCode-Frontend/tree/main/apps/nexora)
 - [Procedural Game Foundry engine](https://github.com/musombi123/Procedural-Game-Foundry)
 - [NEXORA app README](https://github.com/musombi123/RevelaCode-Frontend/blob/main/apps/nexora/README.md)
-- [NEXORA Windows workflow](../.github/workflows/nexora-windows.yml)
+- [NEXORA Windows workflow](../../.github/workflows/nexora-windows.yml)
