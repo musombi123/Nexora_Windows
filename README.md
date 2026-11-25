@@ -62,3 +62,7 @@ Original NEXORA desktop host source and materials are proprietary and all rights
 ## Licence
 
 Original NEXORA Windows host source and materials are proprietary and all rights reserved; see [LICENSE](LICENSE). Tauri, Rust crates, and other third-party components retain their own licences.
+
+## NEXORA partnership and research library
+
+See [`docs/research/`](docs/research/README.md) for the product/partnership overview, collaboration work packages, Windows host architecture and LinkedIn partnership announcement. The Foundry engine is documented separately in [Procedural-Game-Foundry](https://github.com/musombi123/Procedural-Game-Foundry/tree/main/docs/research).
